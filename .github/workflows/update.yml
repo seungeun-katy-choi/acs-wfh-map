@@ -1,0 +1,107 @@
+name: Update ACS data and site
+
+on:
+  schedule:
+    - cron: "17 13 * * *"      # daily, ~9:17 ET; exits in seconds when nothing is new
+  workflow_dispatch:
+    inputs:
+      force_refresh:
+        description: "Re-pull every year from the API"
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths: ["docs/**", "R/**", ".github/workflows/**"]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: acs-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
+    env:
+      CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
+      FORCE: ${{ inputs.force_refresh || 'false' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # Cheap probe before installing R: is the next ACS 1-year release on the API?
+      - name: Check for a new release
+        id: check
+        run: |
+          last=$(ls data-raw/acs1_*.csv.gz 2>/dev/null | sed -E 's/.*acs1_([0-9]{4}).*/\1/' | sort -n | tail -1)
+          next=$(( ${last:-2014} + 1 )); [ "$next" = 2020 ] && next=2021
+          code=$(curl -s -o /dev/null -w '%{http_code}' "https://api.census.gov/data/$next/acs/acs1/groups/B08006.json")
+          echo "last cached: ${last:-none}; $next on API: $code"
+          if [ -z "$last" ] || [ "$code" = 200 ] || [ "$FORCE" = true ] || [ "${{ github.event_name }}" = push ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: r-lib/actions/setup-pandoc@v2
+        if: steps.check.outputs.run == 'true'
+      - uses: r-lib/actions/setup-r@v2
+        if: steps.check.outputs.run == 'true'
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        if: steps.check.outputs.run == 'true'
+        with:
+          packages: |
+            any::tidyverse
+            any::tidycensus
+            any::tigris
+            any::sf
+            any::jsonlite
+            any::httr
+            any::rmarkdown
+
+      - name: Build data
+        if: steps.check.outputs.run == 'true'
+        run: |
+          Rscript -e 'rmarkdown::render("R/build_data.Rmd", knit_root_dir = getwd(),
+            output_dir = "docs", output_file = "build-report.html",
+            params = list(force_refresh = as.logical(Sys.getenv("FORCE", "false"))))'
+
+      - name: Commit new data
+        id: commit
+        if: steps.check.outputs.run == 'true'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data-raw docs
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            latest=$(jq -r .latest_year docs/data/manifest.json)
+            git commit -m "Data update: ACS 1-year through $latest"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  deploy:
+    needs: update
+    if: needs.update.outputs.changed == 'true' || github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main            # include the data commit made by the update job
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+      - id: deployment
+        uses: actions/deploy-pages@v4
