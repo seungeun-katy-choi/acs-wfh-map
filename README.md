@@ -4,6 +4,12 @@ An interactive map of the share of workers who worked from home, by state, metro
 
 The data come from the Census API through `tidycensus`. A GitHub Action checks the API daily and rebuilds the site when a new ACS 1-year release appears, so the 2025 data will be added on the first run after the API serves it.
 
+Whenever you want an update (for example, once 2025 is out):
+
+Click the Actions tab.
+Click Update ACS data and site in the left list.
+Click Run workflow, then the green Run workflow button.
+
 ## Setup (once)
 
 1. Create a GitHub repository and push this folder to `main`.
