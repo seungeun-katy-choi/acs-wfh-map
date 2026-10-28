@@ -1,8 +1,6 @@
 name: Update ACS data and site
 
 on:
-  schedule:
-    - cron: "17 13 * * *"      # daily, ~9:17 ET; exits in seconds when nothing is new
   workflow_dispatch:
     inputs:
       force_refresh:
