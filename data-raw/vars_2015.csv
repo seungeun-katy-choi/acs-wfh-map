@@ -1,0 +1,95 @@
+name,table,dim,group_key,group_label,role,var_num,year
+B08006_017,B08006,all,all_workers,All workers,wfh,17,2015
+B08006_034,B08006,sex,male,Male,wfh,34,2015
+B08006_051,B08006,sex,female,Female,wfh,51,2015
+B08101_050,B08101,age,16_to_19_years,16 to 19 years,wfh,50,2015
+B08101_051,B08101,age,20_to_24_years,20 to 24 years,wfh,51,2015
+B08101_052,B08101,age,25_to_44_years,25 to 44 years,wfh,52,2015
+B08101_053,B08101,age,45_to_54_years,45 to 54 years,wfh,53,2015
+B08101_054,B08101,age,55_to_59_years,55 to 59 years,wfh,54,2015
+B08101_055,B08101,age,60_to_64_years,60 to 64 years,wfh,55,2015
+B08101_056,B08101,age,65_years_and_over,65 years and over,wfh,56,2015
+B08105A_007,B08105A,race,white_alone_incl_hispanic,White alone (incl. Hispanic),wfh,7,2015
+B08105B_007,B08105B,race,black_or_african_american_alone,Black or African American alone,wfh,7,2015
+B08105C_007,B08105C,race,american_indian_and_alaska_native_alone,American Indian and Alaska Native alone,wfh,7,2015
+B08105D_007,B08105D,race,asian_alone,Asian alone,wfh,7,2015
+B08105E_007,B08105E,race,native_hawaiian_and_other_pacific_islander_alone,Native Hawaiian and Other Pacific Islander alone,wfh,7,2015
+B08105F_007,B08105F,race,some_other_race_alone,Some other race alone,wfh,7,2015
+B08105G_007,B08105G,race,two_or_more_races,Two or more races,wfh,7,2015
+B08105H_007,B08105H,race,white_alone_not_hispanic_or_latino,"White alone, not Hispanic or Latino",wfh,7,2015
+B08105I_007,B08105I,race,hispanic_or_latino,Hispanic or Latino,wfh,7,2015
+B08119_056,B08119,earnings,1_to_9_999_or_loss,"$1 to $9,999 or loss",wfh,56,2015
+B08119_057,B08119,earnings,10_000_to_14_999,"$10,000 to $14,999",wfh,57,2015
+B08119_058,B08119,earnings,15_000_to_24_999,"$15,000 to $24,999",wfh,58,2015
+B08119_059,B08119,earnings,25_000_to_34_999,"$25,000 to $34,999",wfh,59,2015
+B08119_060,B08119,earnings,35_000_to_49_999,"$35,000 to $49,999",wfh,60,2015
+B08119_061,B08119,earnings,50_000_to_64_999,"$50,000 to $64,999",wfh,61,2015
+B08119_062,B08119,earnings,65_000_to_74_999,"$65,000 to $74,999",wfh,62,2015
+B08119_063,B08119,earnings,75_000_or_more,"$75,000 or more",wfh,63,2015
+B08124_044,B08124,occupation,management_business_science_and_arts_occupations,"Management, business, science, and arts occupations",wfh,44,2015
+B08124_045,B08124,occupation,service_occupations,Service occupations,wfh,45,2015
+B08124_046,B08124,occupation,sales_and_office_occupations,Sales and office occupations,wfh,46,2015
+B08124_047,B08124,occupation,natural_resources_construction_and_maintenance_occupations,"Natural resources, construction, and maintenance occupations",wfh,47,2015
+B08124_048,B08124,occupation,production_transportation_and_material_moving_occupations,"Production, transportation, and material moving occupations",wfh,48,2015
+B08124_049,B08124,occupation,military_specific_occupations,Military specific occupations,wfh,49,2015
+B08126_092,B08126,industry,agriculture_forestry_fishing_and_hunting_and_mining,"Agriculture, forestry, fishing and hunting, and mining",wfh,92,2015
+B08126_093,B08126,industry,construction,Construction,wfh,93,2015
+B08126_094,B08126,industry,manufacturing,Manufacturing,wfh,94,2015
+B08126_095,B08126,industry,wholesale_trade,Wholesale trade,wfh,95,2015
+B08126_096,B08126,industry,retail_trade,Retail trade,wfh,96,2015
+B08126_097,B08126,industry,transportation_and_warehousing_and_utilities,"Transportation and warehousing, and utilities",wfh,97,2015
+B08126_098,B08126,industry,information,Information,wfh,98,2015
+B08126_099,B08126,industry,finance_and_insurance_and_real_estate_and_rental_and_leasing,"Finance and insurance, and real estate and rental and leasing",wfh,99,2015
+B08126_100,B08126,industry,professional_scientific_and_management_and_administrative_and_waste_management_services,"Professional, scientific, and management, and administrative and waste management services",wfh,100,2015
+B08126_101,B08126,industry,educational_services_and_health_care_and_social_assistance,"Educational services, and health care and social assistance",wfh,101,2015
+B08126_102,B08126,industry,arts_entertainment_and_recreation_and_accommodation_and_food_services,"Arts, entertainment, and recreation, and accommodation and food services",wfh,102,2015
+B08126_103,B08126,industry,other_services_except_public_administration,Other services (except public administration),wfh,103,2015
+B08126_104,B08126,industry,public_administration,Public administration,wfh,104,2015
+B08126_105,B08126,industry,armed_forces,Armed forces,wfh,105,2015
+B08006_001,B08006,all,all_workers,All workers,workers,1,2015
+B08006_018,B08006,sex,male,Male,workers,18,2015
+B08006_035,B08006,sex,female,Female,workers,35,2015
+B08101_002,B08101,age,16_to_19_years,16 to 19 years,workers,2,2015
+B08101_003,B08101,age,20_to_24_years,20 to 24 years,workers,3,2015
+B08101_004,B08101,age,25_to_44_years,25 to 44 years,workers,4,2015
+B08101_005,B08101,age,45_to_54_years,45 to 54 years,workers,5,2015
+B08101_006,B08101,age,55_to_59_years,55 to 59 years,workers,6,2015
+B08101_007,B08101,age,60_to_64_years,60 to 64 years,workers,7,2015
+B08101_008,B08101,age,65_years_and_over,65 years and over,workers,8,2015
+B08105A_001,B08105A,race,white_alone_incl_hispanic,White alone (incl. Hispanic),workers,1,2015
+B08105B_001,B08105B,race,black_or_african_american_alone,Black or African American alone,workers,1,2015
+B08105C_001,B08105C,race,american_indian_and_alaska_native_alone,American Indian and Alaska Native alone,workers,1,2015
+B08105D_001,B08105D,race,asian_alone,Asian alone,workers,1,2015
+B08105E_001,B08105E,race,native_hawaiian_and_other_pacific_islander_alone,Native Hawaiian and Other Pacific Islander alone,workers,1,2015
+B08105F_001,B08105F,race,some_other_race_alone,Some other race alone,workers,1,2015
+B08105G_001,B08105G,race,two_or_more_races,Two or more races,workers,1,2015
+B08105H_001,B08105H,race,white_alone_not_hispanic_or_latino,"White alone, not Hispanic or Latino",workers,1,2015
+B08105I_001,B08105I,race,hispanic_or_latino,Hispanic or Latino,workers,1,2015
+B08119_002,B08119,earnings,1_to_9_999_or_loss,"$1 to $9,999 or loss",workers,2,2015
+B08119_003,B08119,earnings,10_000_to_14_999,"$10,000 to $14,999",workers,3,2015
+B08119_004,B08119,earnings,15_000_to_24_999,"$15,000 to $24,999",workers,4,2015
+B08119_005,B08119,earnings,25_000_to_34_999,"$25,000 to $34,999",workers,5,2015
+B08119_006,B08119,earnings,35_000_to_49_999,"$35,000 to $49,999",workers,6,2015
+B08119_007,B08119,earnings,50_000_to_64_999,"$50,000 to $64,999",workers,7,2015
+B08119_008,B08119,earnings,65_000_to_74_999,"$65,000 to $74,999",workers,8,2015
+B08119_009,B08119,earnings,75_000_or_more,"$75,000 or more",workers,9,2015
+B08124_002,B08124,occupation,management_business_science_and_arts_occupations,"Management, business, science, and arts occupations",workers,2,2015
+B08124_003,B08124,occupation,service_occupations,Service occupations,workers,3,2015
+B08124_004,B08124,occupation,sales_and_office_occupations,Sales and office occupations,workers,4,2015
+B08124_005,B08124,occupation,natural_resources_construction_and_maintenance_occupations,"Natural resources, construction, and maintenance occupations",workers,5,2015
+B08124_006,B08124,occupation,production_transportation_and_material_moving_occupations,"Production, transportation, and material moving occupations",workers,6,2015
+B08124_007,B08124,occupation,military_specific_occupations,Military specific occupations,workers,7,2015
+B08126_002,B08126,industry,agriculture_forestry_fishing_and_hunting_and_mining,"Agriculture, forestry, fishing and hunting, and mining",workers,2,2015
+B08126_003,B08126,industry,construction,Construction,workers,3,2015
+B08126_004,B08126,industry,manufacturing,Manufacturing,workers,4,2015
+B08126_005,B08126,industry,wholesale_trade,Wholesale trade,workers,5,2015
+B08126_006,B08126,industry,retail_trade,Retail trade,workers,6,2015
+B08126_007,B08126,industry,transportation_and_warehousing_and_utilities,"Transportation and warehousing, and utilities",workers,7,2015
+B08126_008,B08126,industry,information,Information,workers,8,2015
+B08126_009,B08126,industry,finance_and_insurance_and_real_estate_and_rental_and_leasing,"Finance and insurance, and real estate and rental and leasing",workers,9,2015
+B08126_010,B08126,industry,professional_scientific_and_management_and_administrative_and_waste_management_services,"Professional, scientific, and management, and administrative and waste management services",workers,10,2015
+B08126_011,B08126,industry,educational_services_and_health_care_and_social_assistance,"Educational services, and health care and social assistance",workers,11,2015
+B08126_012,B08126,industry,arts_entertainment_and_recreation_and_accommodation_and_food_services,"Arts, entertainment, and recreation, and accommodation and food services",workers,12,2015
+B08126_013,B08126,industry,other_services_except_public_administration,Other services (except public administration),workers,13,2015
+B08126_014,B08126,industry,public_administration,Public administration,workers,14,2015
+B08126_015,B08126,industry,armed_forces,Armed forces,workers,15,2015
