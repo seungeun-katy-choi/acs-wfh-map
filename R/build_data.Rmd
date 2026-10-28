@@ -1,0 +1,130 @@
+---
+title: "ACS 1-year work-from-home data build"
+output:
+  html_document:
+    toc: false
+params:
+  first_year: 2015
+  baseline_year: 2019
+  force_refresh: false
+---
+
+Builds the data behind the map in `docs/`. Each run checks the Census API for ACS 1-year releases not yet cached in `data-raw/`, pulls only those, then rebuilds every export from the cache. Set `CENSUS_API_KEY` in the environment first.
+
+## STEP 0: Setup
+
+```{r setup, message = FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+library(tidyverse)
+library(jsonlite)
+library(sf)
+library(tidycensus)
+library(tigris)
+options(tigris_use_cache = TRUE)
+
+root <- normalizePath(".")   # render with knit_root_dir = repo root (see README)
+source(file.path(root, "R", "functions.R"))
+
+raw_dir  <- file.path(root, "data-raw")              # per-year cache, committed
+out_dir  <- file.path(root, "docs", "data")          # served by GitHub Pages
+dir.create(raw_dir, showWarnings = FALSE)
+dir.create(file.path(out_dir, "geo"), recursive = TRUE, showWarnings = FALSE)
+
+census_api_key(Sys.getenv("CENSUS_API_KEY"))
+levels_to_pull <- level_catalog$id
+```
+
+## STEP 1: Which years are available and not yet cached
+
+```{r years}
+cached <- list.files(raw_dir, "^acs1_\\d{4}\\.csv\\.gz$") %>% str_extract("\\d{4}") %>% as.integer()
+if (params$force_refresh) cached <- integer(0)
+
+candidates <- setdiff(params$first_year:as.integer(format(Sys.Date(), "%Y")), c(cached, 2020))
+new_years  <- keep(candidates, acs1_available)
+years      <- sort(c(cached, new_years))
+
+tibble(cached = paste(sort(cached), collapse = " "),
+       new    = paste(new_years, collapse = " "))
+```
+
+## STEP 2: Pull new years
+
+```{r fetch}
+# One call to load_variables() per year, then all WFH variables per level
+for (y in new_years) {
+  message("Fetching ", y)
+  vars <- load_variables(y, "acs1", cache = TRUE) %>% parse_wfh_vars() %>% mutate(year = y)
+  raw  <- map_dfr(levels_to_pull, fetch_level, vars = vars$name, year = y)
+
+  write_csv(vars, file.path(raw_dir, sprintf("vars_%d.csv", y)))
+  write_csv(raw,  file.path(raw_dir, sprintf("acs1_%d.csv.gz", y)))
+}
+```
+
+## STEP 3: WFH shares and MOEs
+
+```{r shares}
+wfh_vars <- map_dfr(years, ~ read_csv(file.path(raw_dir, sprintf("vars_%d.csv", .x)),
+                                      col_types = cols(year = "i", var_num = "i", .default = "c")))
+raw <- map_dfr(years, ~ read_csv(file.path(raw_dir, sprintf("acs1_%d.csv.gz", .x)),
+                                 col_types = cols(year = "i", estimate = "d", moe = "d", .default = "c")))
+
+shares <- build_shares(raw, wfh_vars)
+
+# Group order and labels follow the latest year; race follows the catalog order
+latest <- max(years)
+groups <- wfh_vars %>%
+  filter(year == latest, role == "workers") %>%
+  left_join(table_catalog %>% transmute(table, tbl_order = row_number()), by = "table") %>%
+  arrange(dim, tbl_order, var_num) %>%
+  distinct(dim, group_key, group_label)
+
+# Groups missing from some years (label changes) show as gaps; list them here
+wfh_vars %>% distinct(dim, group_key, year) %>% count(dim, group_key) %>%
+  filter(n < length(years)) %>% rename(years_present = n)
+
+# Sanity check: national WFH share by year (expect ~5% pre-2020, ~13-18% after)
+shares %>% filter(level == "us", dim == "all") %>%
+  select(year, workers = estimate_workers, wfh = estimate_wfh, share, share_moe)
+```
+
+## STEP 4: Export JSON and boundaries for the site
+
+```{r export}
+# Data: one file per level x dimension
+for (lvl in levels_to_pull) for (d in dim_catalog$id) {
+  g <- groups$group_key[groups$dim == d]
+  write_dim_file(shares, lvl, d, g, years, file.path(out_dir, sprintf("wfh_%s_%s.json", lvl, d)))
+}
+
+# Region names (and place points)
+place_pts <- fetch_place_points(years)
+for (lvl in setdiff(levels_to_pull, "us")) {
+  idx <- geo_index(raw, lvl)
+  if (lvl == "place") idx <- left_join(idx, place_pts, by = "id")
+  write_json(idx, file.path(out_dir, "geo", sprintf("%s_index.json", lvl)), digits = 5)
+}
+
+# Boundaries (newest vintage available)
+st <- fetch_shapes(states, years, resolution = "20m")
+write_geojson(st$shp, file.path(out_dir, "geo", "state.geojson"))
+cb <- fetch_shapes(core_based_statistical_areas, years, resolution = "20m")
+write_geojson(filter(cb$shp, LSAD == "M1"), file.path(out_dir, "geo", "metro.geojson"))
+
+# Manifest the site reads first
+manifest <- list(
+  built         = format(Sys.time(), "%Y-%m-%d %H:%M UTC", tz = "UTC"),
+  years         = I(years),
+  baseline_year = params$baseline_year,
+  latest_year   = latest,
+  boundary_year = st$year,
+  levels        = level_catalog %>% select(id, label),
+  dims          = dim_catalog %>%
+    mutate(groups = map(id, ~ groups %>% filter(dim == .x) %>% select(key = group_key, label = group_label)))
+)
+write_json(manifest, file.path(out_dir, "manifest.json"), auto_unbox = TRUE, pretty = TRUE)
+
+list.files(out_dir, recursive = TRUE) %>% tibble(file = .) %>%
+  mutate(kb = round(file.size(file.path(out_dir, file)) / 1024))
+```

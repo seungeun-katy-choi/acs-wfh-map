@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Work From Home Map</title>
+  <meta name="description" content="Change in the share of workers who work from home, ACS 1-year estimates, by region and worker characteristics.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="titles">
+      <h1>Working from home, before and after COVID</h1>
+      <p class="sub" id="sub">Share of workers 16+ who worked from home, ACS 1-year estimates</p>
+    </div>
+    <form class="controls" id="controls" onsubmit="return false">
+      <label>Geography <select id="level"></select></label>
+      <label>Characteristic <select id="dim"></select></label>
+      <label class="grow">Group <select id="group"></select></label>
+      <label>Show
+        <select id="mode">
+          <option value="change">Change (pp)</option>
+          <option value="level">Share in year</option>
+        </select>
+      </label>
+      <label id="y0wrap">From <select id="y0"></select></label>
+      <label><span id="y1label">To</span> <select id="y1"></select></label>
+      <label class="check"><input type="checkbox" id="fade" checked> Fade non-significant</label>
+      <label class="grow search">Find <input id="search" list="geolist" placeholder="Region name" autocomplete="off"></label>
+      <datalist id="geolist"></datalist>
+    </form>
+  </header>
+
+  <main class="layout">
+    <div id="map" aria-label="Map of work-from-home shares"></div>
+    <aside id="panel" aria-live="polite"></aside>
+  </main>
+
+  <footer class="notes" id="notes">
+    Source: U.S. Census Bureau, American Community Survey 1-year estimates, tables B08006, B08101, B08105A-I, B08119, B08124, B08126.
+    The Census Bureau did not release standard 1-year estimates for 2020.
+    Margins of error are at the 90% level; a change is called significant when it exceeds the MOE of the difference, √(MOE₁² + MOE₂²).
+    1-year estimates cover areas with 65,000+ residents.
+  </footer>
+
+  <div id="tip" class="tip" role="tooltip" hidden></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
